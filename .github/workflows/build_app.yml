@@ -26,6 +26,7 @@ jobs:
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
         workflow: build_qt_static.yml
+        run_id: 311466620
         name: qt5_5151_static_binaries_win.zip
         path: ..\
     # - name: Fetch static Qt version
