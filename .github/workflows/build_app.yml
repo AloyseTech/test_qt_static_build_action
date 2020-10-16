@@ -32,9 +32,9 @@ jobs:
         ..\Qt5_binaries\bin\qmake -r CONFIG+=static
         jom -j4
         7z a app-windows-static-x86_64.zip ./bin
-      -name: Upload release on Github
-        uses: svenstaro/upload-release-action@v1-release
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: app-windows-static-x86_64.zip
-          asset_name: app-windows-static-x86_64.zip
+    - name: Upload release on Github
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: app-windows-static-x86_64.zip
+        asset_name: app-windows-static-x86_64.zip
