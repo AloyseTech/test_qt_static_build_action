@@ -29,16 +29,15 @@ jobs:
         run_id: 311466620
         name: qt5_5151_static_binaries_win.zip
         path: ..\
-    # - name: Fetch static Qt version
-    #   run: |
-    #     Invoke-WebRequest https://github.com/AloyseTech/test_qt_static_build_action/suites/1353493356/artifacts/21982952 -OutFile .\qt_win_static.zip
-    #     expand-archive -path "qt_win_static.zip" -destinationpath "..\"
+    - name: Extract static Qt version
+      run: |
+        expand-archive -path "..\qt5_5151_static_binaries_win.zip" -destinationpath "..\"
     - name: Build Application
       run: |
         dir ..
         cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
         Get-Content "$env:temp\vcvars.txt" | Foreach-Object { if ($_ -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } }
-        ..\qt5_5151_static_binaries_win.zip\Qt5_binaries\bin\qmake -r CONFIG+=static
+        ..\Qt5_binaries\bin\qmake -r CONFIG+=static
         jom -j4
         7z a app-windows-static-x86_64.zip ./bin
     - name: Upload release on Github
