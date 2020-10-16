@@ -5,7 +5,7 @@ on:
 
 jobs:
   GenerateWinStaticBinaries:
-    runs-on: windows-2020
+    runs-on: windows-2019
 
     steps:
     - name: Clone repository
