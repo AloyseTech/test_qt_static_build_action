@@ -1,0 +1,40 @@
+name: Build Application
+
+on:
+  workflow_dispatch
+
+jobs:
+  GenerateWinStaticBinaries:
+    runs-on: windows-2020
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+    - name: Install Python 3.7 version
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+    - name: Install jom
+      run: |
+        Invoke-WebRequest http://download.qt.io/official_releases/jom/jom.zip -OutFile .\jom.zip
+        expand-archive -path "jom.zip" -destinationpath "$HOME\jom"
+        # echo "::add-path::$HOME\jom"
+        echo "$HOME\jom" >> $GITHUB_PATH
+    - name: Fetch static Qt version
+      run: |
+        Invoke-WebRequest https://github.com/AloyseTech/test_qt_static_build_action/suites/1353493356/artifacts/21982952 -OutFile .\qt_win_static.zip
+        expand-archive -path "qt_win_static.zip" -destinationpath "..\"
+    - name: Build Application
+      run: |
+        cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
+        Get-Content "$env:temp\vcvars.txt" | Foreach-Object { if ($_ -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } }
+        ..\Qt5_binaries\bin\qmake -r CONFIG+=static
+        jom -j4
+        7z a app-windows-static-x86_64.zip ./bin
+      -name: Upload release on Github
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: app-windows-static-x86_64.zip
+          asset_name: app-windows-static-x86_64.zip

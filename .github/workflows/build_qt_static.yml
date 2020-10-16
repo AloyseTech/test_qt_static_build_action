@@ -1,7 +1,7 @@
-name: Build
+name: Build Static Qt
 
 on:
-  push
+  workflow_dispatch
 
 jobs:
   GenerateLinuxStaticBinaries:
@@ -80,9 +80,11 @@ jobs:
         architecture: 'x64'
     - name: Install jom
       run: |
-        Invoke-WebRequest https://www.dropbox.com/s/dku543gtw7ik7hr/jom.zip?dl=1 -OutFile .\jom.zip
+        # Invoke-WebRequest https://www.dropbox.com/s/dku543gtw7ik7hr/jom.zip?dl=1 -OutFile .\jom.zip
+        Invoke-WebRequest http://download.qt.io/official_releases/jom/jom.zip -OutFile .\jom.zip
         expand-archive -path "jom.zip" -destinationpath "$HOME\jom"
-        echo "::add-path::$HOME\jom"
+        # echo "::add-path::$HOME\jom"
+        echo "$HOME\jom" >> $GITHUB_PATH
     - name: Compile static Qt version
       run: |
         # Clone Qt5 repo
@@ -99,7 +101,7 @@ jobs:
         Get-Content "$env:temp\vcvars.txt" | Foreach-Object { if ($_ -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } }
         # Configure Qt5
         ..\qt5\configure.bat -release -static -no-pch -optimize-size -opengl desktop -platform win32-msvc -prefix "..\Qt5_binaries" -skip webengine -nomake tools -nomake tests -nomake examples -opensource -confirm-license
-        jom -j4
+        jom -j8
         nmake install
     - name: Package binaries
       run: |
