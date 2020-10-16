@@ -27,7 +27,7 @@ jobs:
         github_token: ${{secrets.GITHUB_TOKEN}}
         workflow: build_qt_static.yml
         run_id: 311466620
-        name: qt5_5151_static_binaries_win.zip
+        name: qt5_5151_static_binaries_win
         path: ..\
     # - name: Fetch static Qt version
     #   run: |
@@ -35,9 +35,10 @@ jobs:
     #     expand-archive -path "qt_win_static.zip" -destinationpath "..\"
     - name: Build Application
       run: |
+        dir
         cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
         Get-Content "$env:temp\vcvars.txt" | Foreach-Object { if ($_ -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } }
-        ..\Qt5_binaries\bin\qmake -r CONFIG+=static
+        ..\qt5_5151_static_binaries_win\Qt5_binaries\bin\qmake -r CONFIG+=static
         jom -j4
         7z a app-windows-static-x86_64.zip ./bin
     - name: Upload release on Github
