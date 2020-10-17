@@ -19,8 +19,8 @@ jobs:
       run: |
         Invoke-WebRequest http://download.qt.io/official_releases/jom/jom.zip -OutFile .\jom.zip
         expand-archive -path "jom.zip" -destinationpath "$HOME\jom"
-        # echo "::add-path::$HOME\jom"
-        echo "$HOME\jom" >> $GITHUB_PATH
+        echo "::add-path::$HOME\jom"
+        # echo "$HOME\jom" >> $GITHUB_PATH
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
       with:
