@@ -39,7 +39,7 @@ jobs:
         ..\Qt5_binaries\bin\qmake -r CONFIG+=static
         jom -j4
         dir
-        7z a app-windows-static-x86_64.zip ./bin
+        7z a app-windows-static-x86_64.zip ./release
     - name: Upload release on Github
       uses: svenstaro/upload-release-action@v1-release
       with:
