@@ -46,3 +46,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: app-windows-static-x86_64.zip
         asset_name: app-windows-static-x86_64.zip
+        tag_name: ${{ github.ref }}
